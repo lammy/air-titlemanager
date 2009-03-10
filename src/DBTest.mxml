@@ -2,9 +2,9 @@
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 
-       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="540" height="460">
+       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="540" height="460"  viewSourceURL="srcview/index.html">
        
-
+ 		<mx:Style source="/assets/css/customWindow.css" />
        <mx:Script>
 
             <![CDATA[
@@ -49,6 +49,48 @@
 
  private var selectStmt:SQLStatement =  new SQLStatement();
 
+ private var isMaximize:Boolean = false; // 최대화 되었는지  
+   
+ private function closeWindow():void  
+ {  
+     this.exit();     // windows를 닫고 application을 종료  
+ }  
+   
+ private function maximizeWindow():void  
+ {  
+     if(isMaximize)  
+     {  
+         isMaximize = false;  
+         btnMax.styleName = "increaseBtn";   // 최대화 버튼으로 바꿈  
+         btnResize.visible = true;           // 리사이즈 버튼 나타내기  
+                               
+         this.restore();                     //  window를 정상크기로   
+     }  
+     else  
+     {  
+         isMaximize = true;  
+         btnMax.styleName = "decreaseBtn";   // 정상화 버튼으로 바꿈  
+         btnResize.visible = false;          // 리사이즈 버튼 없에기  
+           
+         this.maximize();                    //  window를 최대화  
+     }     
+ }  
+   
+ private function minimizeWindow():void  
+ {  
+     this.minimize();                        //  window를 최소화  
+ }  
+   
+ private function moveWindow():void  
+ {  
+     this.stage.nativeWindow.startMove();    //  window 움직이기       
+ }  
+   
+ private function resizeWindow():void  
+ {  
+     //  window 리사이즈하기  
+     this.stage.nativeWindow.startResize(NativeWindowResize.BOTTOM_RIGHT);  
+ }  
  
 
  // 바탕화면에 데이터베이스 있는지 확인하고, 없이면 새 테이블 만들기
@@ -331,13 +373,23 @@ private function errorHandler(event:SQLErrorEvent):void{
 
    
 
-       <mx:Panel x="10" y="10" width="517" height="428" layout="absolute"
+       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" right="10" top="10" bottom="10"> 
+             <mx:Button width="10" height="10" id="btnClose" top="8" right="10"   
+             buttonMode="true" useHandCursor="true" styleName="closeBtn" click="closeWindow()"/>  
+         <mx:Button width="10" height="10" id="btnMax" top="8" right="25"   
+             buttonMode="true" useHandCursor="true" styleName="increaseBtn" click="maximizeWindow()"/>  
+         <mx:Button width="10" height="10" id="btnMin" top="8" right="41"   
+             buttonMode="true" useHandCursor="true" styleName="minimizeBtn" click="minimizeWindow()"/>  
+         <mx:Button width="10" height="10" id="btnResize" right="0" bottom="0"   
+             styleName="resizeHndlr" mouseDown="resizeWindow()"/> 
+         <mx:Canvas height="20" top="8" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
+             mouseDown="moveWindow()" right="59" left="10">  
+             <mx:Label x="13" y="-2" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>  
+         </mx:Canvas>  
 
-            title="Wii Titles Application" fontSize="11">
+            <mx:DataGrid x="10" y="40" editable="true" id="dg"
 
-            <mx:DataGrid x="10" y="10" editable="true" id="dg"
-
-                 dataProvider="{resultAC}" width="477">
+                 dataProvider="{resultAC}" width="477" height="323">
 
                   <mx:columns>
 						<mx:DataGridColumn headerText="NO" dataField="tID"/>
@@ -356,22 +408,22 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             </mx:DataGrid>
 
-            <mx:Button x="10" y="210" label="테이블생성" click="createTable()"/>
+            <mx:Button x="10" y="371" label="테이블생성" click="createTable()"/>
 
-            <mx:Button x="104" y="210" label="보기" click="selectData()"/>
+            <mx:Button x="96" y="371" label="보기" click="selectData()"/>
 
-            <mx:Button x="162" y="210" label="삽입" click="insertData()"/>
+            <mx:Button x="151" y="371" label="삽입" click="insertData()"/>
 
-            <mx:Button x="220" y="210" label="수정" click="updateData()"/>
+            <mx:Button x="206" y="371" label="수정" click="updateData()"/>
 
-            <mx:Button x="278" y="210" label="삭제" click="deleteData()"/>
+            <mx:Button x="261" y="371" label="삭제" click="deleteData()"/>
 
-            <mx:TextArea x="10" y="248" width="414" fontSize="14" color="#F80421"
+            <mx:TextArea x="10" y="401" width="414" fontSize="14" color="#F80421"
 
-                  text="현상황" height="25" id="situation"/>
+                  text="현상황" height="25" id="situation" editable="false"/>
 
-       </mx:Panel>
-
+       </mx:Canvas>
+ 
       
 
 </mx:WindowedApplication>
