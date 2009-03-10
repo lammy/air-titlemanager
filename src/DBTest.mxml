@@ -2,7 +2,7 @@
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 
-       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="540" height="460"  viewSourceURL="srcview/index.html">
+       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="682" height="460"  viewSourceURL="srcview/index.html">
        
  		<mx:Style source="/assets/css/customWindow.css" />
        <mx:Script>
@@ -380,7 +380,7 @@ private function errorHandler(event:SQLErrorEvent):void{
              buttonMode="true" useHandCursor="true" styleName="increaseBtn" click="maximizeWindow()"/>  
          <mx:Button width="10" height="10" id="btnMin" top="8" right="41"   
              buttonMode="true" useHandCursor="true" styleName="minimizeBtn" click="minimizeWindow()"/>  
-         <mx:Button width="10" height="10" id="btnResize" right="0" bottom="0"   
+         <mx:Button width="10" height="10" id="btnResize" right="-1" bottom="-1"   
              styleName="resizeHndlr" mouseDown="resizeWindow()"/> 
          <mx:Canvas height="20" top="8" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
              mouseDown="moveWindow()" right="59" left="10">  
@@ -389,7 +389,7 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             <mx:DataGrid x="10" y="40" editable="true" id="dg"
 
-                 dataProvider="{resultAC}" width="477" height="323">
+                 dataProvider="{resultAC}" width="638" height="323" enabled="true">
 
                   <mx:columns>
 						<mx:DataGridColumn headerText="NO" dataField="tID"/>
@@ -408,7 +408,7 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             </mx:DataGrid>
 
-            <mx:Button x="10" y="371" label="테이블생성" click="createTable()"/>
+            <mx:Button x="10" y="371" label="테이블생성" click="createTable()" fontFamily="Verdana"/>
 
             <mx:Button x="96" y="371" label="보기" click="selectData()"/>
 

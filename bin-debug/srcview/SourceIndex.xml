@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index>
+	<title>Source of DBTest</title>
+	<nodes>
+		<node label="libs">
+		</node>
+		<node label="src" icon="classpathIcon" expanded="true">
+			<node label="assets">
+				<node label="css">
+					<node label="customWindow.css" icon="cssIcon" url="source/assets/css/customWindow.css.html"/>
+				</node>
+				<node label="icons">
+					<node label="closeButton.png" icon="imageIcon" url="source/assets/icons/closeButton.png.html"/>
+					<node label="decreaseButton.png" icon="imageIcon" url="source/assets/icons/decreaseButton.png.html"/>
+					<node label="icon128.png" icon="imageIcon" url="source/assets/icons/icon128.png.html"/>
+					<node label="icon16.png" icon="imageIcon" url="source/assets/icons/icon16.png.html"/>
+					<node label="icon32.png" icon="imageIcon" url="source/assets/icons/icon32.png.html"/>
+					<node label="icon48.png" icon="imageIcon" url="source/assets/icons/icon48.png.html"/>
+					<node label="increaseButton.png" icon="imageIcon" url="source/assets/icons/increaseButton.png.html"/>
+					<node label="minimizeButton.png" icon="imageIcon" url="source/assets/icons/minimizeButton.png.html"/>
+					<node label="resizeHandler.png" icon="imageIcon" url="source/assets/icons/resizeHandler.png.html"/>
+				</node>
+			</node>
+			<node label="DBTest-app.xml" url="source/DBTest-app.xml.txt"/>
+			<node selected="true" label="DBTest.mxml" icon="mxmlAppIcon" url="source/DBTest.mxml.html"/>
+		</node>
+		<node label="DBTest.air" url="source/DBTest.air"/>
+		<node label="DBTest.airi" url="source/DBTest.airi"/>
+	</nodes>
+</index>
