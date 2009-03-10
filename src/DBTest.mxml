@@ -2,7 +2,8 @@
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 
-       applicationComplete="init()" layout="absolute" width="540" height="460">
+       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="540" height="460">
+       
 
        <mx:Script>
 
