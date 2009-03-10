@@ -1,0 +1,376 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
+
+       applicationComplete="init()" layout="absolute" width="540" height="460">
+
+       <mx:Script>
+
+            <![CDATA[
+
+           
+
+ import mx.controls.List;
+
+ import mx.controls.TextInput;
+
+ import mx.events.DataGridEvent;
+
+ import mx.collections.ArrayCollection; 
+
+ import mx.utils.ArrayUtil;
+
+ import mx.controls.Alert;
+
+ import flash.data.SQLConnection;
+
+ import flash.data.SQLResult;
+
+ import flash.data.SQLStatement; 
+
+ import flash.events.SQLErrorEvent;
+
+ import flash.events.SQLEvent;
+
+ import mx.events.ListEvent;
+
+ import flash.filesystem.File;
+
+ 
+
+ [Bindable]
+
+ private var resultData:Array;
+
+ 
+
+ private var conn:SQLConnection = new SQLConnection();
+
+ private var selectStmt:SQLStatement =  new SQLStatement();
+
+ 
+
+ // 바탕화면에 데이터베이스 있는지 확인하고, 없이면 새 테이블 만들기
+
+ private function connectDB():void{
+
+       var dbFile:File = File.desktopDirectory.resolvePath("WiiTitles.db");
+
+       if(dbFile.exists) {
+
+             conn.addEventListener(SQLEvent.OPEN, openHandler);
+
+             conn.open(dbFile);
+
+       }
+
+       else {
+
+             conn.addEventListener(SQLEvent.OPEN, newDatabaseHandler);
+
+             conn.open(dbFile);
+
+       }
+
+ }
+
+ 
+
+ private function openHandler(event:SQLEvent):void{
+
+       selectData();
+
+    situation.text = "데이터베이스가 이미 열러 있습니다";
+
+ }
+
+ 
+
+// 데이터 가져오기
+
+ private function selectData():void{
+
+       selectStmt.sqlConnection = conn;
+
+       var sql:String = "SELECT * FROM titles";
+
+       selectStmt.text = sql;
+
+       selectStmt.addEventListener(SQLEvent.RESULT, selectHandler);
+
+       selectStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+
+    selectStmt.execute();
+
+ }
+
+ 
+
+ private function selectHandler(event:SQLEvent):void{
+
+       resultData = selectStmt.getResult().data;
+
+ }
+
+  
+
+// 새 테이블 생성하기
+
+ private function newDatabaseHandler(event:SQLEvent):void{
+
+       createTable();
+
+       situation.text = "Table created";
+
+ }
+
+ 
+
+ private function createTable():void{
+
+       var createStmt:SQLStatement =  new SQLStatement();
+
+    createStmt.sqlConnection = conn;
+
+    var sql:String =
+
+    "CREATE TABLE IF NOT EXISTS titles (" +
+
+    "tID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+    
+	"relNum TEXT, " +
+
+    "title1 TEXT, " +
+
+    //"title2 TEXT, " +
+	
+	"area NUMERIC CHECK (0 <= area < 5), " +
+	
+	"genre NUMERIC CHECK (0 <= genre < 5), " +
+
+    "have BOOLEAN " +
+
+    ")";
+
+    createStmt.text = sql;
+
+    createStmt.addEventListener(SQLEvent.RESULT, createTableResult);
+
+    createStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+
+    createStmt.execute();
+
+ }
+
+  
+
+ private function createTableResult(event:SQLEvent):void{
+
+       situation.text = "WiiTitles 테이블이 생성 되었습니다 ";
+
+ }
+
+ 
+
+//데이터 삽입
+
+private function insertData():void{
+
+       var insertStmt:SQLStatement =  new SQLStatement();
+
+    insertStmt.sqlConnection = conn;
+
+    var sql:String = "INSERT INTO titles " +
+
+    "(relNum, title1, area, genre, have) VALUES ('', '', 0, 0, true)";  
+
+    insertStmt.text = sql;
+
+ 
+
+    insertStmt.addEventListener(SQLEvent.RESULT, insertHandler);
+
+    insertStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+
+    insertStmt.execute();
+
+ }
+
+ 
+
+ private function insertHandler(event:SQLEvent):void{      
+
+       situation.text = "삽입 되었습니다";
+
+    selectData();
+
+ }
+
+ 
+
+// 데이터 삭제
+
+ private function deleteData():void{
+
+       if (resultAC.length >0)
+
+       var tID:int = dg.selectedItem.tID;
+
+    
+
+    var deleteStmt:SQLStatement =  new SQLStatement();
+
+    deleteStmt.sqlConnection = conn;
+
+ 
+
+    var sql:String = "DELETE FROM titles WHERE tID="+tID;  
+
+    deleteStmt.text = sql;
+
+ 
+
+    deleteStmt.addEventListener(SQLEvent.RESULT, deleteHandler);
+
+    deleteStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+
+    deleteStmt.execute();
+
+    resultAC.removeItemAt(tID);
+
+ }
+
+ 
+
+ private function deleteHandler(event:SQLEvent):void{
+
+       situation.text = "삭제 되었습니다";
+
+    selectData();
+
+ }
+
+ 
+
+ // 에러 처리
+
+private function errorHandler(event:SQLErrorEvent):void{
+
+       var errMessage:String;
+
+    //errMessage = event.error.message  ;
+
+    situation.text += errMessage;
+
+ }
+
+ 
+
+ private function init():void{
+
+    stage.displayState = StageDisplayState.NORMAL;
+
+    connectDB();
+
+ }
+
+ 
+
+// 데이터 업데이트   
+
+ private function updateData():void{
+
+    var updateStmt:SQLStatement =  new SQLStatement();
+
+    updateStmt.sqlConnection = conn;
+
+ 
+
+    var sql:String = "UPDATE titles " +
+
+	"SET relNUm = '" +  dg.selectedItem.relNum + "', " +
+	
+    "title1 = '" +  dg.selectedItem.title1 + "', " +
+
+    "area = " + dg.selectedItem.area + ", " +
+
+    "genre = " + dg.selectedItem.genre + ", " +
+    
+    "have = " + dg.selectedItem.have + " " +
+    
+    "WHERE tID="+ dg.selectedItem.tID;  
+
+    updateStmt.text = sql;
+
+    updateStmt.addEventListener(SQLEvent.RESULT, updateHandler);
+
+    updateStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+
+    updateStmt.execute();
+
+ }
+
+ 
+
+ private function updateHandler(event:SQLEvent):void{
+
+       situation.text = "수정 되었습니다";
+
+    selectData();
+
+ }
+
+            ]]>
+
+       </mx:Script>
+
+      
+
+    <mx:ArrayCollection id="resultAC" source ="{ArrayUtil.toArray(resultData)}" />
+
+   
+
+       <mx:Panel x="10" y="10" width="517" height="428" layout="absolute"
+
+            title="Wii Titles Application" fontSize="11">
+
+            <mx:DataGrid x="10" y="10" editable="true" id="dg"
+
+                 dataProvider="{resultAC}" width="477">
+
+                  <mx:columns>
+						<mx:DataGridColumn headerText="NO" dataField="tID"/>
+						
+                        <mx:DataGridColumn headerText="번호" dataField="relNum"/>
+
+              			<mx:DataGridColumn headerText="타이틀" dataField="title1"/>
+
+              			<mx:DataGridColumn headerText="지역" dataField="area"/>
+
+              			<mx:DataGridColumn headerText="장르" dataField="genre"/>
+              			
+              			<mx:DataGridColumn headerText="보유" dataField="have"/>
+
+                  </mx:columns>
+
+            </mx:DataGrid>
+
+            <mx:Button x="10" y="210" label="테이블생성" click="createTable()"/>
+
+            <mx:Button x="104" y="210" label="보기" click="selectData()"/>
+
+            <mx:Button x="162" y="210" label="삽입" click="insertData()"/>
+
+            <mx:Button x="220" y="210" label="수정" click="updateData()"/>
+
+            <mx:Button x="278" y="210" label="삭제" click="deleteData()"/>
+
+            <mx:TextArea x="10" y="248" width="414" fontSize="14" color="#F80421"
+
+                  text="현상황" height="25" id="situation"/>
+
+       </mx:Panel>
+
+      
+
+</mx:WindowedApplication>
