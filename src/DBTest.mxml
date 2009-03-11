@@ -2,7 +2,7 @@
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 
-       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="682" height="460"  viewSourceURL="srcview/index.html">
+       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="640" height="540"  viewSourceURL="srcview/index.html">
        
  		<mx:Style source="/assets/css/customWindow.css" />
        <mx:Script>
@@ -225,7 +225,7 @@ private function insertData():void{
 
     var sql:String = "INSERT INTO titles " +
 
-    "(relNum, title1, area, genre, have) VALUES ('', '', 0, 0, true)";  
+    "(relNum, title1, area, genre, have) VALUES ('', '', 0, 0, false)";  
 
     insertStmt.text = sql;
 
@@ -367,29 +367,27 @@ private function errorHandler(event:SQLErrorEvent):void{
 
        </mx:Script>
 
-      
-
     <mx:ArrayCollection id="resultAC" source ="{ArrayUtil.toArray(resultData)}" />
 
    
 
-       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" right="10" top="10" bottom="10"> 
-             <mx:Button width="10" height="10" id="btnClose" top="8" right="10"   
+       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" top="10" width="620" height="520" > 
+         <mx:Button width="10" height="10" id="btnClose" top="8" right="10"   
              buttonMode="true" useHandCursor="true" styleName="closeBtn" click="closeWindow()"/>  
          <mx:Button width="10" height="10" id="btnMax" top="8" right="25"   
              buttonMode="true" useHandCursor="true" styleName="increaseBtn" click="maximizeWindow()"/>  
-         <mx:Button width="10" height="10" id="btnMin" top="8" right="41"   
+         <mx:Button width="10" height="10" id="btnMin" top="8" right="40"   
              buttonMode="true" useHandCursor="true" styleName="minimizeBtn" click="minimizeWindow()"/>  
-         <mx:Button width="10" height="10" id="btnResize" right="-1" bottom="-1"   
+         <mx:Button width="15" height="15" id="btnResize" right="0" bottom="0"   
              styleName="resizeHndlr" mouseDown="resizeWindow()"/> 
-         <mx:Canvas height="20" top="8" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
-             mouseDown="moveWindow()" right="59" left="10">  
-             <mx:Label x="13" y="-2" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>  
+         <mx:Canvas height="24" top="6" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
+             mouseDown="moveWindow()" right="75" left="10">  
+             <mx:Label x="12" y="0" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>  
          </mx:Canvas>  
 
-            <mx:DataGrid x="10" y="40" editable="true" id="dg"
+            <mx:DataGrid x="10" y="40" id="dg"
 
-                 dataProvider="{resultAC}" width="638" height="323" enabled="true">
+                 dataProvider="{resultAC}" width="94%" height="300" enabled="true">
 
                   <mx:columns>
 						<mx:DataGridColumn headerText="NO" dataField="tID"/>
@@ -398,18 +396,41 @@ private function errorHandler(event:SQLErrorEvent):void{
 
               			<mx:DataGridColumn headerText="타이틀" dataField="title1"/>
 
-              			<mx:DataGridColumn headerText="지역" dataField="area">
+              			<mx:DataGridColumn headerText="지역">
               				<mx:itemRenderer>
               					<mx:Component>
-              						<mx:ComboBox />
+              						<mx:ComboBox >
+              							<mx:dataProvider>
+    										<mx:Array>
+    											<mx:Object label="KR" data="0" />
+    											<mx:Object label="JP" data="1"/>
+    											<mx:Object label="US" data="2"/>
+    											<mx:Object label="EU" data="3"/>
+    										</mx:Array>          								
+              							</mx:dataProvider>
+    
+              						</mx:ComboBox>
+              						
               					</mx:Component>
               				</mx:itemRenderer>
               			</mx:DataGridColumn>
 
-              			<mx:DataGridColumn headerText="장르" dataField="genre">
+              			<mx:DataGridColumn headerText="장르" >
               				<mx:itemRenderer>
               					<mx:Component>
-              						<mx:ComboBox />
+              						<mx:ComboBox >
+              							<mx:dataProvider>
+    										<mx:Array>
+    											<mx:Object label="ACT" data="0"/>
+    											<mx:Object label="SPO" data="1"/>
+    											<mx:Object label="RPG" data="2"/>
+    											<mx:Object label="SIM" data="3"/>
+    											<mx:Object label="ADV" data="4"/>
+    											<mx:Object label="STU" data="6"/>
+    											<mx:Object label="ETC" data="7"/>
+    										</mx:Array>          								
+              							</mx:dataProvider>
+               						</mx:ComboBox>
               					</mx:Component>
               				</mx:itemRenderer>
               			</mx:DataGridColumn>
@@ -436,7 +457,7 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             <mx:Button x="261" y="371" label="삭제" click="deleteData()"/>
 
-            <mx:TextArea x="10" y="401" width="414" fontSize="14" color="#F80421"
+            <mx:TextArea x="10" y="401" width="80%" fontSize="14" color="#F80421"
 
                   text="현상황" height="25" id="situation" editable="false"/>
 
