@@ -398,11 +398,29 @@ private function errorHandler(event:SQLErrorEvent):void{
 
               			<mx:DataGridColumn headerText="타이틀" dataField="title1"/>
 
-              			<mx:DataGridColumn headerText="지역" dataField="area"/>
+              			<mx:DataGridColumn headerText="지역" dataField="area">
+              				<mx:itemRenderer>
+              					<mx:Component>
+              						<mx:ComboBox />
+              					</mx:Component>
+              				</mx:itemRenderer>
+              			</mx:DataGridColumn>
 
-              			<mx:DataGridColumn headerText="장르" dataField="genre"/>
+              			<mx:DataGridColumn headerText="장르" dataField="genre">
+              				<mx:itemRenderer>
+              					<mx:Component>
+              						<mx:ComboBox />
+              					</mx:Component>
+              				</mx:itemRenderer>
+              			</mx:DataGridColumn>
               			
-              			<mx:DataGridColumn headerText="보유" dataField="have"/>
+              			<mx:DataGridColumn headerText="보유" dataField="have">
+              				<mx:itemRenderer>
+              					<mx:Component>
+              						<mx:CheckBox/>
+              					</mx:Component>
+              				</mx:itemRenderer>
+              			</mx:DataGridColumn>
 
                   </mx:columns>
 
