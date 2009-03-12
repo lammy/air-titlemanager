@@ -362,6 +362,20 @@ private function errorHandler(event:SQLErrorEvent):void{
     selectData();
 
  }
+ 
+// LabelFunction
+ public function displayArea(item:Object, column:DataGridColumn):String {
+	var iarea:int = item.area;
+	if (iarea == 1)
+		return "KR";
+	else if(iarea == 2)
+		return "JP";
+	else if(iarea == 3)
+		return "US";
+	else if(iarea == 4)
+		return "EU";
+	return "";
+ }
 
             ]]>
 
@@ -396,24 +410,7 @@ private function errorHandler(event:SQLErrorEvent):void{
 
               			<mx:DataGridColumn headerText="타이틀" dataField="title1"/>
 
-              			<mx:DataGridColumn headerText="지역">
-              				<mx:itemRenderer>
-              					<mx:Component>
-              						<mx:ComboBox >
-              							<mx:dataProvider>
-    										<mx:Array>
-    											<mx:Object label="KR" data="1" />
-    											<mx:Object label="JP" data="2"/>
-    											<mx:Object label="US" data="3"/>
-    											<mx:Object label="EU" data="4"/>
-    										</mx:Array>          								
-              							</mx:dataProvider>
-    
-              						</mx:ComboBox>
-              						
-              					</mx:Component>
-              				</mx:itemRenderer>
-              			</mx:DataGridColumn>
+              			<mx:DataGridColumn headerText="지역" dataField="area" labelFunction="displayArea"/>
 
               			<mx:DataGridColumn headerText="장르" >
               				<mx:itemRenderer>
