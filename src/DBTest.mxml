@@ -97,8 +97,8 @@
 
  private function connectDB():void{
 
-       var dbFile:File = File.desktopDirectory.resolvePath("WiiTitles.db");
-
+       //var dbFile:File = File.desktopDirectory.resolvePath("WiiTitles.db");
+		var dbFile:File = File.applicationDirectory.resolvePath("demo.db");
        if(dbFile.exists) {
 
              conn.addEventListener(SQLEvent.OPEN, openHandler);
@@ -402,10 +402,10 @@ private function errorHandler(event:SQLErrorEvent):void{
               						<mx:ComboBox >
               							<mx:dataProvider>
     										<mx:Array>
-    											<mx:Object label="KR" data="0" />
-    											<mx:Object label="JP" data="1"/>
-    											<mx:Object label="US" data="2"/>
-    											<mx:Object label="EU" data="3"/>
+    											<mx:Object label="KR" data="1" />
+    											<mx:Object label="JP" data="2"/>
+    											<mx:Object label="US" data="3"/>
+    											<mx:Object label="EU" data="4"/>
     										</mx:Array>          								
               							</mx:dataProvider>
     
