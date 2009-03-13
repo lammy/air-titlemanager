@@ -106,7 +106,6 @@
              conn.open(dbFile);
 
        }
-
        else {
 
              conn.addEventListener(SQLEvent.OPEN, newDatabaseHandler);
