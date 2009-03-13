@@ -442,7 +442,7 @@ private function errorHandler(event:SQLErrorEvent):void{
              styleName="resizeHndlr" mouseDown="resizeWindow()"/> 
          <mx:Canvas height="24" top="6" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
              mouseDown="moveWindow()" right="75" left="10">  
-             <mx:Label x="12" y="0" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>  
+             <mx:Label x="12" y="0" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>
          </mx:Canvas>  
 
             <mx:DataGrid x="10" y="40" id="dg" verticalScrollPolicy="on" itemClick="enabledButtons()"
