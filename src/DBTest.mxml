@@ -2,7 +2,7 @@
 
 <mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml"
 
-       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="640" height="540"  viewSourceURL="srcview/index.html">
+       applicationComplete="init()" layout="absolute" showFlexChrome="false" width="640" height="600"  viewSourceURL="srcview/index.html">
        
  		<mx:Style source="/assets/css/customWindow.css" />
        <mx:Script>
@@ -121,7 +121,7 @@
 
  private function openHandler(event:SQLEvent):void{
 
-       selectData();
+       selectData(0);
 
     situation.text = "데이터베이스가 이미 열러 있습니다";
 
@@ -131,20 +131,24 @@
 
 // 데이터 가져오기
 
- private function selectData():void{
+ private function selectData(beforeIndex:int):void{
+	
+ 	selectStmt.sqlConnection = conn;
 
-       selectStmt.sqlConnection = conn;
+ 	var sql:String = "SELECT * FROM titles";
 
-       var sql:String = "SELECT * FROM titles";
+ 	selectStmt.text = sql;
 
-       selectStmt.text = sql;
+ 	selectStmt.addEventListener(SQLEvent.RESULT, selectHandler);
 
-       selectStmt.addEventListener(SQLEvent.RESULT, selectHandler);
+ 	selectStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
 
-       selectStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
-
-    selectStmt.execute();
-
+ 	selectStmt.execute();
+ 	
+ 	if (beforeIndex>-1) {
+ 		dg.verticalScrollPosition = beforeIndex;
+ 	}
+ 	
  }
 
  
@@ -152,6 +156,8 @@
  private function selectHandler(event:SQLEvent):void{
 
        resultData = selectStmt.getResult().data;
+       //아이템이 선택되기 전에는 수정, 삭제 금지!
+       enabledButtons();
 
  }
 
@@ -245,7 +251,11 @@ private function insertData():void{
 
        situation.text = "삽입 되었습니다";
 
-    selectData();
+    selectData(dg.maxVerticalScrollPosition);
+//    if (dg) {
+// 		dg.validateNow();
+// 		dg.verticalScrollPosition = dg.maxVerticalScrollPosition;
+// 	}
 
  }
 
@@ -255,41 +265,38 @@ private function insertData():void{
 
  private function deleteData():void{
 
-       if (resultAC.length >0)
+ 	if (resultAC.length >0 && dg.selectedItem.tID != null) {
 
-       var tID:int = dg.selectedItem.tID;
+ 		var tID:int = dg.selectedItem.tID;
 
-    
+   	 	var deleteStmt:SQLStatement =  new SQLStatement();
 
-    var deleteStmt:SQLStatement =  new SQLStatement();
-
-    deleteStmt.sqlConnection = conn;
+    	deleteStmt.sqlConnection = conn;
 
  
 
-    var sql:String = "DELETE FROM titles WHERE tID="+tID;  
+    	var sql:String = "DELETE FROM titles WHERE tID="+tID;  
 
-    deleteStmt.text = sql;
+    	deleteStmt.text = sql;
 
  
 
-    deleteStmt.addEventListener(SQLEvent.RESULT, deleteHandler);
+    	deleteStmt.addEventListener(SQLEvent.RESULT, deleteHandler);
 
-    deleteStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
+    	deleteStmt.addEventListener(SQLErrorEvent.ERROR, errorHandler);
 
-    deleteStmt.execute();
+    	deleteStmt.execute();
 
-    resultAC.removeItemAt(tID);
-
+    	//resultAC.removeItemAt(tID);
+ 	}
  }
 
  
 
  private function deleteHandler(event:SQLEvent):void{
 
-       situation.text = "삭제 되었습니다";
-
-    selectData();
+    situation.text = "삭제 되었습니다";
+	selectData(dg.verticalScrollPosition);
 
  }
 
@@ -333,7 +340,7 @@ private function errorHandler(event:SQLErrorEvent):void{
 
 	"SET relNUm = '" +  dg.selectedItem.relNum + "', " +
 	
-    "title1 = '" +  dg.selectedItem.title1 + "', " +
+    "title1 = '" +  dg.selectedItem.title1.replace("'","''") + "', " + //sql구문에러 대응 ('->'')
 
     "area = " + dg.selectedItem.area + ", " +
 
@@ -357,9 +364,10 @@ private function errorHandler(event:SQLErrorEvent):void{
 
  private function updateHandler(event:SQLEvent):void{
 
-       situation.text = "수정 되었습니다";
-
-    selectData();
+    situation.text = "수정 되었습니다";
+	
+	selectData(dg.verticalScrollPosition);
+    
 
  }
  
@@ -397,16 +405,33 @@ private function errorHandler(event:SQLErrorEvent):void{
 		return "ETC"
 	return "";
  }
-
+ 
+ private function displayRownum(item:Object, column:DataGridColumn):String
+ {
+ 	return (resultAC.getItemIndex(item) + 1).toString();
+ }
+ 
+ private function enabledButtons():void
+ {
+ 	var tf:Boolean = false;
+ 	if (dg.selectedIndex>0) {
+ 		tf = true;
+ 	}
+ 		
+ 	btnUpdate.enabled=tf;
+ 	btnDelete.enabled=tf;
+ }
+ 
+ 
             ]]>
 
        </mx:Script>
 
-    <mx:ArrayCollection id="resultAC" source ="{ArrayUtil.toArray(resultData)}" />
+    <mx:ArrayCollection id="resultAC" source ="{ArrayUtil.toArray(resultData)}"  />
 
    
 
-       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" top="10" width="620" height="520" > 
+       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" top="10" width="620" height="580" > 
          <mx:Button width="10" height="10" id="btnClose" top="8" right="10"   
              buttonMode="true" useHandCursor="true" styleName="closeBtn" click="closeWindow()"/>  
          <mx:Button width="10" height="10" id="btnMax" top="8" right="25"   
@@ -420,12 +445,11 @@ private function errorHandler(event:SQLErrorEvent):void{
              <mx:Label x="12" y="0" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>  
          </mx:Canvas>  
 
-            <mx:DataGrid x="10" y="40" id="dg"
-
-                 dataProvider="{resultAC}" width="94%" height="300" enabled="true">
+            <mx:DataGrid x="10" y="40" id="dg" verticalScrollPolicy="on" itemClick="enabledButtons()"
+                 dataProvider="{resultAC}" width="96%" rowCount="20" enabled="true">
 
                   <mx:columns>
-						<mx:DataGridColumn headerText="NO" dataField="tID" width="40"/>
+						<mx:DataGridColumn headerText="NO" dataField="tID" labelFunction="displayRownum" width="40"/>
 						
                         <mx:DataGridColumn headerText="번호" dataField="relNum" width="40" textAlign="center"/>
 
@@ -447,21 +471,20 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             </mx:DataGrid>
 
-            <mx:Button x="10" y="371" label="테이블생성" click="createTable()" fontFamily="Verdana"/>
+            <mx:Button x="10" y="510" label="테이블생성" click="createTable()" fontFamily="Verdana"/>
 
-            <mx:Button x="96" y="371" label="보기" click="selectData()"/>
+            <mx:Button x="96" y="510" label="보기" click="selectData(0)"/>
 
-            <mx:Button x="151" y="371" label="삽입" click="insertData()"/>
+            <mx:Button x="151" y="510" label="삽입" click="insertData()"/>
 
-            <mx:Button x="206" y="371" label="수정" click="updateData()"/>
+            <mx:Button id="btnUpdate" x="206" y="510" label="수정" click="updateData()"/>
 
-            <mx:Button x="261" y="371" label="삭제" click="deleteData()"/>
+            <mx:Button id="btnDelete" x="261" y="510" label="삭제" click="deleteData()"/>
 
-            <mx:TextArea x="10" y="401" width="80%" fontSize="14" color="#F80421"
+            <mx:TextArea x="10" y="540" width="80%" fontSize="14" color="#F80421"
 
                   text="현상황" height="25" id="situation" editable="false"/>
 
        </mx:Canvas>
  
-
 </mx:WindowedApplication>
