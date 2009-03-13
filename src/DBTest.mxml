@@ -460,6 +460,5 @@ private function errorHandler(event:SQLErrorEvent):void{
 
        </mx:Canvas>
  
-      
 
 </mx:WindowedApplication>
