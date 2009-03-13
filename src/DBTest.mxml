@@ -189,7 +189,7 @@
 	
 	"area NUMERIC CHECK (0 <= area < 5), " +
 	
-	"genre NUMERIC CHECK (0 <= genre < 5), " +
+	"genre NUMERIC CHECK (0 <= genre < 10), " +
 
     "have BOOLEAN " +
 
@@ -376,6 +376,27 @@ private function errorHandler(event:SQLErrorEvent):void{
 		return "EU";
 	return "";
  }
+ 
+ // LabelFunction
+ public function displayJenre(item:Object, column:DataGridColumn):String {
+	var ijenre:int = item.jenre;
+
+	if (ijenre == 1)
+		return "ACT";
+	else if(ijenre == 2)
+		return "SPO";
+	else if(ijenre == 3)
+		return "RPG";
+	else if(ijenre == 4)
+		return "SIM";
+	else if(ijenre == 5)
+		return "ADV";
+	else if(ijenre == 6)
+		return "STU";
+	else if(ijenre ==9)
+		return "ETC"
+	return "";
+ }
 
             ]]>
 
@@ -404,38 +425,20 @@ private function errorHandler(event:SQLErrorEvent):void{
                  dataProvider="{resultAC}" width="94%" height="300" enabled="true">
 
                   <mx:columns>
-						<mx:DataGridColumn headerText="NO" dataField="tID"/>
+						<mx:DataGridColumn headerText="NO" dataField="tID" width="40"/>
 						
-                        <mx:DataGridColumn headerText="번호" dataField="relNum"/>
+                        <mx:DataGridColumn headerText="번호" dataField="relNum" width="40" textAlign="center"/>
 
-              			<mx:DataGridColumn headerText="타이틀" dataField="title1"/>
+              			<mx:DataGridColumn headerText="타이틀" dataField="title1" />
 
-              			<mx:DataGridColumn headerText="지역" dataField="area" labelFunction="displayArea"/>
+              			<mx:DataGridColumn headerText="지역" dataField="area" width="40" textAlign="center" labelFunction="displayArea"/>
 
-              			<mx:DataGridColumn headerText="장르" >
-              				<mx:itemRenderer>
-              					<mx:Component>
-              						<mx:ComboBox >
-              							<mx:dataProvider>
-    										<mx:Array>
-    											<mx:Object label="ACT" data="0"/>
-    											<mx:Object label="SPO" data="1"/>
-    											<mx:Object label="RPG" data="2"/>
-    											<mx:Object label="SIM" data="3"/>
-    											<mx:Object label="ADV" data="4"/>
-    											<mx:Object label="STU" data="6"/>
-    											<mx:Object label="ETC" data="7"/>
-    										</mx:Array>          								
-              							</mx:dataProvider>
-               						</mx:ComboBox>
-              					</mx:Component>
-              				</mx:itemRenderer>
-              			</mx:DataGridColumn>
+              			<mx:DataGridColumn headerText="장르" dataField="jenre" width="60" textAlign="center" labelFunction="displayJenre"/>
               			
-              			<mx:DataGridColumn headerText="보유" dataField="have">
+              			<mx:DataGridColumn headerText="보유" dataField="have" width="40" textAlign="center">
               				<mx:itemRenderer>
               					<mx:Component>
-              						<mx:CheckBox/>
+              						<mx:CheckBox enabled="false"/>
               					</mx:Component>
               				</mx:itemRenderer>
               			</mx:DataGridColumn>
