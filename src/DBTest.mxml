@@ -122,7 +122,7 @@
 
        selectData(0);
 
-    situation.text = "데이터베이스가 이미 열러 있습니다";
+    situation.text = "Hello!";
 
  }
 
