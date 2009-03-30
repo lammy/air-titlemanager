@@ -49,32 +49,32 @@
 
  private var selectStmt:SQLStatement =  new SQLStatement();
 
- private var isMaximize:Boolean = false; // 최대화 되었는지  
+// private var isMaximize:Boolean = false; // 최대화 되었는지  
    
  private function closeWindow():void  
  {  
      this.exit();     // windows를 닫고 application을 종료  
  }  
    
- private function maximizeWindow():void  
- {  
-     if(isMaximize)  
-     {  
-         isMaximize = false;  
-         btnMax.styleName = "increaseBtn";   // 최대화 버튼으로 바꿈  
-         btnResize.visible = true;           // 리사이즈 버튼 나타내기  
-                               
-         this.restore();                     //  window를 정상크기로   
-     }  
-     else  
-     {  
-         isMaximize = true;  
-         btnMax.styleName = "decreaseBtn";   // 정상화 버튼으로 바꿈  
-         btnResize.visible = false;          // 리사이즈 버튼 없에기  
-           
-         this.maximize();                    //  window를 최대화  
-     }     
- }  
+// private function maximizeWindow():void  
+// {  
+//     if(isMaximize)  
+//     {  
+//         isMaximize = false;  
+//         btnMax.styleName = "increaseBtn";   // 최대화 버튼으로 바꿈  
+//         btnResize.visible = true;           // 리사이즈 버튼 나타내기  
+//                               
+//         this.restore();                     //  window를 정상크기로   
+//     }  
+//     else  
+//     {  
+//         isMaximize = true;  
+//         btnMax.styleName = "decreaseBtn";   // 정상화 버튼으로 바꿈  
+//         btnResize.visible = false;          // 리사이즈 버튼 없에기  
+//           
+//         this.maximize();                    //  window를 최대화  
+//     }     
+// }  
    
  private function minimizeWindow():void  
  {  
@@ -86,11 +86,11 @@
      this.stage.nativeWindow.startMove();    //  window 움직이기       
  }  
    
- private function resizeWindow():void  
- {  
-     //  window 리사이즈하기  
-     this.stage.nativeWindow.startResize(NativeWindowResize.BOTTOM_RIGHT);  
- }  
+// private function resizeWindow():void  
+// {  
+//     //  window 리사이즈하기  
+//     this.stage.nativeWindow.startResize(NativeWindowResize.BOTTOM_RIGHT);  
+// }  
  
 
  // 바탕화면에 데이터베이스 있는지 확인하고, 없이면 새 테이블 만들기
@@ -430,15 +430,15 @@ private function errorHandler(event:SQLErrorEvent):void{
 
    
 
-       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" left="10" top="10" width="620" height="580" > 
+       <mx:Canvas id="cvsMain" borderStyle="solid" cornerRadius="5" backgroundColor="#FFFFFF" borderColor="#0096FF" width="640" height="600" > 
          <mx:Button width="10" height="10" id="btnClose" top="8" right="10"   
              buttonMode="true" useHandCursor="true" styleName="closeBtn" click="closeWindow()"/>  
-         <mx:Button width="10" height="10" id="btnMax" top="8" right="25"   
-             buttonMode="true" useHandCursor="true" styleName="increaseBtn" click="maximizeWindow()"/>  
-         <mx:Button width="10" height="10" id="btnMin" top="8" right="40"   
+<!--         <mx:Button width="10" height="10" id="btnMax" top="8" right="25"   
+             buttonMode="true" useHandCursor="true" styleName="increaseBtn" click="maximizeWindow()"/>  -->
+         <mx:Button width="10" height="10" id="btnMin" top="8" right="25"   
              buttonMode="true" useHandCursor="true" styleName="minimizeBtn" click="minimizeWindow()"/>  
-         <mx:Button width="15" height="15" id="btnResize" right="0" bottom="0"   
-             styleName="resizeHndlr" mouseDown="resizeWindow()"/> 
+<!--         <mx:Button width="15" height="15" id="btnResize" right="0" bottom="0"   
+             styleName="resizeHndlr" mouseDown="resizeWindow()"/> 	-->
          <mx:Canvas height="24" top="6" borderStyle="solid" backgroundColor="#00B4FF" cornerRadius="10"   
              mouseDown="moveWindow()" right="75" left="10">  
              <mx:Label x="12" y="0" text="Wii Title Manager" fontSize="14" fontThickness="3" fontSharpness="3" fontAntiAliasType="advanced"/>
@@ -480,9 +480,9 @@ private function errorHandler(event:SQLErrorEvent):void{
 
             <mx:Button id="btnDelete" x="261" y="510" label="삭제" click="deleteData()"/>
 
-            <mx:TextArea x="10" y="540" width="80%" fontSize="14" color="#F80421"
+            <mx:TextArea x="10" y="570" width="96%" fontSize="10" color="#F80421"
 
-                  text="현상황" height="25" id="situation" editable="false"/>
+                  text="현상황" height="18" id="situation" editable="false"/>
 
        </mx:Canvas>
  
